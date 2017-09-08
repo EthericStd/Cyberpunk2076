@@ -3,6 +3,9 @@ root_width = 1200
 root_height = 675
 timer_clock = 60 #fps max
 
+#general
+g = 9.81
+
 #movement
 wall_speed = 8 #pixel per frame update
 

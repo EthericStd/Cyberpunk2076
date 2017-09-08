@@ -14,13 +14,14 @@ if __name__=="__main__":
     pygame.init()
 
     #root surface
-    root=pygame.display.set_mode( (root_width, root_height) )
+    root = pygame.display.set_mode( (root_width, root_height) )
 
     #classes
-    objects=Objects(root)
-    collision=Collision(objects)
-    movement=Movement(objects, collision)
-    animation=Animation(objects)
+    objects = Objects(root)
+    collision = Collision(objects)
+    movement = Movement(objects, collision)
+    animation = Animation(objects)
+    perso = Perso(objects, animation)
 
     #background
     background=pygame.Surface( (root_width, root_height) )
@@ -28,13 +29,17 @@ if __name__=="__main__":
     objects.add(background, 0 ,0, "background")
 
     #character
-    character=pygame.Surface( (50,100) )
+    character = pygame.Surface( (50,100) )
     character.fill((255,128,0))
     objects.add(character, root_width//2, root_height//2, "character")
     collision.add("character")
 
+    #test acc vel
+    perso.spawn(100, 100, 0, 0, 0, 20)
+    perso.add_acceleration(5, -10)
+
     #wall
-    wall=pygame.Surface( (70,70) )
+    wall = pygame.Surface( (70,70) )
     wall.fill((0,128,255))
     objects.add(wall, root_width//2-100, root_height//2, "wall")
     movement.add("wall")
@@ -43,34 +48,36 @@ if __name__=="__main__":
     pygame.key.set_repeat(1,16)
 
     #variables
-    position="game"
-    loop_principal=True
+    position = "game"
+    loop_principal = True
     a = 0
 
     while loop_principal:
-        while position=="game":
+        while position == "game":
             pygame.time.Clock().tick(timer_clock)
 
-            animation.find()
+
 
             for event in pygame.event.get():
                 if event.type == KEYDOWN:
                     movement.processing(event.key)
 
                 if event.type == MOUSEBUTTONDOWN:
-                    if event.button==1:
+                    if event.button == 1:
                         if a == 0:
                             animation.start("nature/herbe", 100, 100, 3000, 2, "nature")
                             a = 1
                         else:
                             animation.start("nature/herbe", 200, 200, 3000, 2, "nature")
-                    elif event.button==3:
+                    elif event.button == 3:
                         animation.move("nature", 8, 8)
 
                 if event.type == QUIT:
                     loop_principal = False
                     position="none"
 
+            animation.find()
+            perso.refresh()
 
             objects.display()
 
